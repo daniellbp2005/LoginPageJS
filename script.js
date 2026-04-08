@@ -5,19 +5,13 @@ const btnLogin = document.getElementById("btnLogin");
 const btnCadastro = document.getElementById("btnCadastro");
 const texto = document.querySelector(".inserir")
 
-let dados = [
+let dados = JSON.parse(localStorage.getItem("salvamento")) || [
     {
         id: 1,
         nome: "daniel",
         senha: "123",
         email: "daniel.l.pires@aluno.senai.br",
     },
-    {
-        id: 2,
-        nome: "Gabriel",
-        senha: "123",
-        email: "gabriel.l.pires@aluno.senai.br",
-    }
 ];
 
 if (btnLogin) {
@@ -37,7 +31,7 @@ if (btnLogin) {
             texto.style.color = "red";
             texto.innerText = "Acesso Negado";
         }
-    })
+    })  
 }
 if (btnCadastro) {
     btnCadastro.addEventListener("click", (event) => {
@@ -47,7 +41,7 @@ if (btnCadastro) {
         let senha = senhaInput.value;
         let nome = nomeInput.value;
 
-        if (email === "" && nome === "" && senha === "") {
+        if (email === "" || nome === "" || senha === "") {
             texto.innerText = "Preencha o Formulário";
             texto.style.color = "red"
             return
@@ -65,6 +59,10 @@ if (btnCadastro) {
             return
         }
         dados.push(novoUser);
+        const userJSON = JSON.stringify(dados); // converte p string
+        localStorage.setItem("salvamento",userJSON);// guardando a string
+        console.log(userJSON);
+        
 
         texto.style.color = "green";
         texto.innerText = "Cadastro Realizado com Sucesso..."
