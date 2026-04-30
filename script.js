@@ -1,70 +1,71 @@
-const emailInput = document.getElementById("email");
-const senhaInput = document.getElementById("senha");
-const nomeInput = document.getElementById("nome");
+const inputLogin = document.getElementById("inputLogin");
+const inputSenha = document.getElementById("inputSenha");
 const btnLogin = document.getElementById("btnLogin");
-const btnCadastro = document.getElementById("btnCadastro");
-const texto = document.querySelector(".inserir")
+var texto = document.querySelector(".texto");
+const inputNome = document.getElementById("inputNome");
+const inputLoginCad = document.getElementById("inputLoginCad");
+const inputSenhaCad = document.getElementById("inputSenhaCad");;
+const btnCad = document.getElementById("btnCad");
+var textoCad = document.querySelector(".textoCad");
 
-let dados = JSON.parse(localStorage.getItem("salvamento")) || [
-    {
-        id: 1,
-        nome: "daniel",
-        senha: "123",
-        email: "daniel.l.pires@aluno.senai.br",
-    },
-];
+let dados = JSON.parse(localStorage.getItem("dados")) || [ { id: 1, nome: "daniel", email: "daniel@123", senha: "123", } ];
 
 if (btnLogin) {
     btnLogin.addEventListener("click", (event) => {
         event.preventDefault();
 
-        let email = emailInput.value;
-        let senha = senhaInput.value;
+        let email = inputLogin.value;
+        let senha = inputSenha.value;
 
-        if (dados.find(aux => aux.senha === senha && aux.email === email)) {
+        if (email.trim() == "" || senha.trim() == "") {
+            texto.style.color = "red";
+            texto.innerText = "Preencha os campos do formulario";
+            return;
+        }
+        else if (dados.find(aux => email == aux.email && senha == aux.senha)) {
             texto.style.color = "green";
-            texto.innerText = "Acesso Liberado";
-        } else if (email === "" || senha === "") {
-            texto.style.color = "red";
-            texto.innerText = "Preencha o Formulárioo";
-        } else {
-            texto.style.color = "red";
-            texto.innerText = "Acesso Negado";
+            texto.innerText = "Acss liberado";
         }
-    })  
-}
-if (btnCadastro) {
-    btnCadastro.addEventListener("click", (event) => {
-        event.preventDefault();
-
-        let email = emailInput.value;
-        let senha = senhaInput.value;
-        let nome = nomeInput.value;
-
-        if (email === "" || nome === "" || senha === "") {
-            texto.innerText = "Preencha o Formulário";
-            texto.style.color = "red"
-            return
+        else {
+            texto.style.color = "orange";
+            texto.innerText = "Dados Incorretos";
         }
-        let novoUser = {
-            id: dados.length + 1,
-            nome: nome,
-            email: email,
-            senha: senha,
-        }
-        console.log(novoUser);
-        if (dados.find(aux => aux.email === email)) {
-            texto.style.color = "red";
-            texto.innerText = "Esse conta já existe";
-            return
-        }
-        dados.push(novoUser);
-        const userJSON = JSON.stringify(dados); // converte p string
-        localStorage.setItem("salvamento",userJSON);// guardando a string
-        console.log(userJSON);
-        
-
-        texto.style.color = "green";
-        texto.innerText = "Cadastro Realizado com Sucesso..."
     })
 }
+
+if (btnCad) {
+    btnCad.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        let email = inputLoginCad.value;
+        let nome = inputNome.value;
+        let senha = inputSenhaCad.value;
+
+        if (email.trim() == "" || nome.trim() == "" || senha.trim() == "") {
+            textoCad.style.color = "red";
+            textoCad.innerText = "Preencha os campos do formulario";
+            return;
+        }
+
+        if (dados.find(aux => email == aux.email)) {
+            textoCad.style.color = "red";
+            textoCad.innerText = "Essa conta já existe, n é possiivel cria-la";
+            return;
+        } else {
+            let newUser = {
+                id: Date.now(),
+                nome: nome,
+                email: email,
+                senha: senha,
+            }
+            dados.push(newUser);
+            let dadosAtt = JSON.stringify(dados);
+            localStorage.setItem("dados",dadosAtt);
+            
+            textoCad.style.color = "green";
+            textoCad.innerText = "Conta criada com secusso";
+        }
+
+    })
+}
+
